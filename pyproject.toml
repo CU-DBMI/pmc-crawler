@@ -18,6 +18,7 @@ python-dotenv = {extras = ["cli"], version = "^0.20.0"}
 smartsheet-python-sdk = "^2.105.1"
 docxtpl = "^0.16.0"
 matplotlib = "^3.5.2"
+jsonschema = "^4.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
