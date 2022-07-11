@@ -1,0 +1,40 @@
+{
+    "$id": "effort_hours-resource.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "tasks per resource",
+    "additionalProperties": false,
+    "type": "object",
+    "title": "Resource schema",
+    "required": [
+        "MDC Resource ID",
+        "Resource Name"
+    ],
+    "properties": {
+        "MDC Resource ID": {
+            "type": "string",
+            "title": "The MDC Resource ID"
+        },
+        "Resource Name": {
+            "type": "string",
+            "title": "The name of the person or team"
+        },
+        "Notes": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "title": "Optional Resource Notes"
+        },
+        "Completed Hours": {
+            "type": "number",
+            "title": "Completed hours for this task for the report"
+        },
+        "Tasks": {
+            "type": "array",
+            "title": "A list of tasks",
+            "items": {
+                "$ref": "effort_hours-task.json"
+            }
+        }
+    }
+}
