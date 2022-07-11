@@ -10,7 +10,7 @@ python = "~3.9"  # hard dependency, https://github.com/smartsheet-platform/smart
 pandas = "^1.4.2"
 papermill = "^2.3.4"
 pywin32 = {version = "304", platform = "windows"}
-prefect = {extras = ["all"], version = "^1.2.1"}
+prefect = {extras = ["all"], version = "^2.0b"}
 jupyter = "^1.0.0"
 scrapbook = {extras = ["all"], version = "^0.5.0"}
 PyNaCl = "^1.5.0"
