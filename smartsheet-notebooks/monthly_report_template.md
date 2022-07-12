@@ -1,11 +1,11 @@
 # Center for Health AI - Software Engineering
 
-For the month ending {{account['Month-ending Date']}}
+For the month ending {{report['Month-ending Date']}}
 
-Prepared {{account['Report Prepared Date']}}
-## Account **{{account['Account/Client']}}**
-{% for project in account['Projects'] -%}
-### Project **{{project['Project Title']}}**
+Prepared {{report['Report Prepared Date']}}
+## Client **{{report['Client']['Client Name']}}**
+{% for project in report['Client']['Projects'] -%}
+### Project **{{project['Project Name']}}**
 {% if project['Grant Proposal #'] -%}
 Grant Proposal #: {{project['Grant Proposal #']}}
 {% endif -%}
@@ -17,13 +17,13 @@ Notes: {{project['Notes']}}
 |Task ID|Task|Notes|Complete Date|Hours
 |---|---|---|---|---
 {% for task in resource['Tasks'] -%}
-|{{task['task_id']}}|{{task['Title']}}{% if task['Pull Request URL'] -%}<br>{{task['Pull Request URL']}}{% endif %}{% if task['Issue URL'] -%}<br>{{task['Issue URL']}}{% endif -%}|{{task['Notes']}}{% if['integration_state_rule'] -%}<br>_{{task['integration_state_rule']}}_{% endif %}|{{task['task_end_date']}}|{{task['Hours']}}
+|{{task['MDC Task ID']}}|{{task['Task Name']}}{% if task['Pull Request URL'] -%}<br>{{task['Pull Request URL']}}{% endif %}{% if task['Issue URL'] -%}<br>{{task['Issue URL']}}{% endif -%}|{{task['Notes']}}{% if['integration_state_rule'] -%}<br>_{{task['integration_state_rule']}}_{% endif %}|{{task['task_end_date']}}|{{task['Completed Hours']}}
 {% endfor -%}
 |   |   |   |Subtotal Task Hours|**{{resource['Completed Hours']}}**
 {% endfor -%}
 |   |{{project['Project Title']}}|   |Total Project Hours|**{{project['Completed Hours']}}**
 {% endfor -%}
-|   |{{account['Account/Client']}}|   |Total Account Hours|**{{account['Completed Hours']}}**
+|   |{{report['Client']['Client Name']}}|   |Total Account Hours|**{{report['Client']['Completed Hours']}}**
 
 ## Notes
 1. `hours_split_between_owners` indicates more than one resource worked on a task; hours are split between the resources.
