@@ -1,0 +1,6 @@
+# ./build_all_images.sh builds this as pmc-crawler-jlab:latest
+FROM pmc-crawler:latest
+
+RUN poetry add jupyterlab
+
+CMD ["python"]

@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "smartsheet-notebooks"
+name = "pmc-crawler"
 version = "0.1.0"
-description = "Notebook-as-functions for CHAI Smartsheet work"
-authors = ["CU Health AI Software Engineering <cuhealthai-softwareengineering@cuanschutz.edu>"]
+description = "PMC Citation Crawler, implemented as a notebook"
+authors = ["DBMI Software Engineering <cuhealthai-softwareengineering@cuanschutz.edu>"]
 license = "BSD-3"
 
 [tool.poetry.dependencies]
@@ -23,6 +23,8 @@ manubot = "^0.5.3"
 citeproc-py = "^0.6.0"
 ratelimit = "^2.2.1"
 python-slugify = "^6.1.2"
+tqdm = "^4.64.1"
+jupyterlab = "^3.5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"

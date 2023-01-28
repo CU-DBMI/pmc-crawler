@@ -1,16 +1,14 @@
-# smartsheet-notebooks
+# PMC Citation Crawler
 
 Center-specific notebook logic, mostly with MDC data
 
 # Requirements
 
-This uses the poetry tool.
+You'll need Docker installed, which you can obtain for your platform here:
+https://www.docker.com/products/docker-desktop/
 
-# Install Poetry
-
-    In my environment I run entirely "path-less", with a number of scripts for each version of Python (e.g python39.cmd, python310.cmd). After each of those scripts is run, I install poetry in each, and proceed from there. Your experience may/will vary.
-
-    pip install poetry
+Alternatively, you can run the project outside of a Docker container, in which
+case you'll need [Poetry](https://python-poetry.org/), a Python packaging and dependency manager.
 
 # To work in notebooks
 
@@ -21,7 +19,7 @@ This uses the poetry tool.
 Note, the `_output` folder must already exist.
 
     # from the source folder
-    cd smartsheet-notebooks
+    cd notebooks
     
     poetry run papermill --no-report-mode --log-output "smartsheet Set Task Integration Status.ipynb" "_output\smartsheet Set Task Integration Status.ipynb" 
 

@@ -130,10 +130,10 @@ dmypy.json
 
 # custom
 .env*
-/smartsheet-notebooks/_output
-/smartsheet-notebooks/_cache
+/notebooks/_output
+/notebooks/_cache
 
 # dagger ignores, as more than dependencies are included
 cue.mod/pkg
 cue.mod/usr
-/smartsheet-notebooks/_build
+/notebooks/_build
