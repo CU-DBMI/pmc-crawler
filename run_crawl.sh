@@ -9,7 +9,12 @@ if ! ( docker ps | grep reformed >/dev/null 2>&1 ); then
 fi
 
 t_first_date=$(date +%Y/%m/01)
-t_last_date=$(date -d "`date +%Y%m01` +1 month -1 day" +%Y/%m/%d)
+
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+    t_last_date=$( date -v1d -v+1m -v-1d +%Y/%m/%d )
+else
+    t_last_date=$( date -d "`date +%Y%m01` +1 month -1 day" +%Y/%m/%d )
+fi
 
 # ---------------------------------------
 # --- step 1. prompt for run parameters
