@@ -96,6 +96,8 @@ https://www.ncbi.nlm.nih.gov/account/settings/.
 5. Enter the key into the `NCBI_API_KEY` line in the `app/.env` file we created
 earlier. For example, with the above key, the line would look like
 `NCBI_API_KEY=ad3da0297af65a2e4dd1bb917447bbd3c388`.
+6. Enter your NCBI account's email address into the line starting with `NCBI_API_EMAIL=`, e.g.
+`NCBI_API_EMAIL=someone@somewhere.edu`
 
 ## Usage
 
