@@ -20,7 +20,7 @@ directly if you need support for another platform, e.g. Windows.
 
 You'll need Docker installed, which you can obtain for your platform here:
 https://www.docker.com/products/docker-desktop/. You'll also need a paid
-Smartsheet account, as the crawler makes use of the Smartsheet API to pull a
+[Smartsheet](https://www.smartsheet.com/) account, as the crawler makes use of the Smartsheet API to pull a
 spreadsheet with information about the authors. (Note that this may change soon;
 instead, you'll have the option of providing a local spreadsheet rather than
 using Smartsheet.)
