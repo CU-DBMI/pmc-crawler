@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-JLAB_PORT=8888
-
 # ensure the format converter container is running
 if ! ( docker ps | grep reformed >/dev/null 2>&1 ); then
     echo "* Reformed isn't running, booting it now..."
     docker run -d --name reformed -p 8088:8000 ghcr.io/davidlougheed/reformed:sha-1b8f46b
 fi
 
+# produce default first-of-month and last-of-month values to use as start date, end date
 t_first_date=$(date +%Y/%m/01)
 
 if [[ "$OSTYPE" =~ ^darwin ]]; then
