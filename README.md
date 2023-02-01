@@ -5,6 +5,12 @@ For a given start and end date, this script crawls NCBI's Pubmed Central (aka
 a PDF report of publications for the given authors within the start and end
 dates, and a CSV spreadsheet of the same information.
 
+*(Note that this is a fork of
+[CU-DBMI/smartsheet-notebooks](https://github.com/CU-DBMI/smartsheet-notebooks),
+but with significant changes. This repo is pruned down to just the PMC citation
+crawler from that repo and adds a few quality-of-life and documentation
+additions to make it easier for other people to use the crawler.)*
+
 ## Requirements
 
 You should ideally use this script from a Linux or Mac OS X machine (i.e., a GNU
