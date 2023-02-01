@@ -14,8 +14,9 @@ additions to make it easier for other people to use the crawler.)*
 ## Requirements
 
 You should ideally use this script from a Linux or Mac OS X machine (i.e., a GNU
-environment in which you can run bash). Feel free to file an issue or reach out
-to me directly if you need support for another platform, e.g. Windows.
+environment in which you can run bash). Feel free to [file an
+issue](https://github.com/CU-DBMI/pmc-crawler/issues) or reach out to me
+directly if you need support for another platform, e.g. Windows.
 
 You'll need Docker installed, which you can obtain for your platform here:
 https://www.docker.com/products/docker-desktop/. You'll also need a paid
