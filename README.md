@@ -31,7 +31,7 @@ you can skip any sections that reference Smartsheet below.
 ## Setup
 
 There are a few parts to setting up the crawl:
-1. specifying the list of authors in a Smartsheet
+1. specifying the list of authors in a Smartsheet or a local Excel spreadsheet
 2. (if using Smartsheet) giving the script access to Smartsheet via a Smartsheet
    API key
 3. (optional, but encouraged) providing an NCBI API key to make queries against
