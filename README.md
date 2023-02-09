@@ -61,8 +61,8 @@ filtering by department, and at least one of "ORCID number" or "NCBI search
 term" need to be specified.
 
 The "NCBI search term" is used to query PMC; it should look at least like
-"(<Surname> <Given Name>)", but more commonly is written as "(<Surname> <Given
-Name> [Author])" to constrain the returned entries to just those where the
+"(\<Surname\> \<Given Name\>)", but more commonly is written as "(\<Surname\> \<Given
+Name\> [Author])" to constrain the returned entries to just those where the
 person is tagged as an author. The search term can include any of the operators
 or tags mentioned in the [PubMed Filters help
 page](https://pubmed.ncbi.nlm.nih.gov/help/#help-filters). You can also use the
