@@ -80,8 +80,8 @@ if ( [ -z "${AUTHORS_SHEET_PATH}" ] && [ -z "${AUTHORS_SHEET_ID}" ] ) || [ "${AU
     exit 1
 fi
 
-# ensure that AUTHORS_SHEET_PATH is a file
-if [ ! -f "${AUTHORS_SHEET_PATH}" ]; then
+# if we're using AUTHORS_SHEET_PATH, ensure that it's an accessible file
+if [ ! -z "${AUTHORS_SHEET_PATH}" ] && [ ! -f "${AUTHORS_SHEET_PATH}" ]; then
     echo "ERROR: author sheet path ('${AUTHORS_SHEET_PATH}') is not accessible"
     exit 1
 fi
