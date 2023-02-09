@@ -9,8 +9,9 @@ TARGET_NOTEBOOK=${TARGET_NOTEBOOK:-"Create Cites from PMC Lookups - Monthly.ipyn
 echo "--- Starting the PMC crawler with the following parameters:"
 echo "* START_DATE: ${START_DATE}"
 echo "* END_DATE: ${END_DATE}"
-echo "* AUTHORS_SHEET_ID: ${AUTHORS_SHEET_ID}"
-echo "* DEPARTMENT: ${DEPARTMENT}"
+echo "* AUTHORS_SHEET_ID: ${AUTHORS_SHEET_ID:-(n/a)}"
+echo "* AUTHORS_SHEET_PATH: ${AUTHORS_SHEET_PATH:-(n/a)}"
+echo "* DEPARTMENT: ${DEPARTMENT:-(n/a)}"
 echo "---"
 
 cd /app/notebooks && \
@@ -20,6 +21,7 @@ poetry run papermill \
     -r start_date "${START_DATE}" \
     -r end_date "${END_DATE}" \
     -r authors_sheet_id "${AUTHORS_SHEET_ID}" \
+    -r authors_sheet_path "${AUTHORS_SHEET_PATH}" \
     -r department "${DEPARTMENT}" \
     "${TARGET_NOTEBOOK}" \
     "/app/_output/${TARGET_NOTEBOOK}"  

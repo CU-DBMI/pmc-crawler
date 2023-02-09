@@ -9,9 +9,9 @@ dates, and a CSV spreadsheet of the same information.
 [CU-DBMI/smartsheet-notebooks](https://github.com/CU-DBMI/smartsheet-notebooks),
 but with significant changes. This repo is pruned down to just the PMC citation
 crawler from that repo and adds a few quality-of-life and documentation
-additions to make it easier for other people to use the crawler. Credit goes
-to Steve Taylor (@staylorx) for the implementation; I (@falquaddoomi) made a
-few tweaks and containerized it.*
+additions to make it easier for other people to use the crawler. Credit goes to
+Steve Taylor (@staylorx) for the implementation; I (@falquaddoomi) made a few
+tweaks and containerized it.*
 
 ## Requirements
 
@@ -21,25 +21,31 @@ issue](https://github.com/CU-DBMI/pmc-crawler/issues) or reach out to me
 directly if you need support for another platform, e.g. Windows.
 
 You'll need Docker installed, which you can obtain for your platform here:
-https://www.docker.com/products/docker-desktop/. You'll also need a paid
-[Smartsheet](https://www.smartsheet.com/) account, as the crawler makes use of the Smartsheet API to pull a
-spreadsheet with information about the authors. (Note that this may change soon;
-instead, you'll have the option of providing a local spreadsheet rather than
-using Smartsheet.)
+https://www.docker.com/products/docker-desktop/. If you wish to import your
+ authors list from [Smartsheet](https://www.smartsheet.com/), you'll also need a
+paid account, as the crawler makes use of the Smartsheet API to pull a
+spreadsheet with information about the authors. You can alternatively provide
+your authors list as a file (currently only as an Excel `.xlsx`), in which case
+you can skip any sections that reference Smartsheet below.
 
 ## Setup
 
 There are a few parts to setting up the crawl:
 1. specifying the list of authors in a Smartsheet
-2. giving the script access to Smartsheet via a Smartsheet API key
+2. (if using Smartsheet) giving the script access to Smartsheet via a Smartsheet
+   API key
 3. (optional, but encouraged) providing an NCBI API key to make queries against
    PMC
 
 ### Creating the Authors List
 
-You'll need to first create a Smartsheet spreadsheet where you list the authors
-whose publications you want to gather from PMC. The spreadsheet must contain at
-least the following columns with the exact names, including case, below:
+If you wish to use Smartsheet, you should create a new spreadsheet via their web
+app. If you're using a local spreadsheet file, you should instead create a new
+file (preferably in the same folder as this README) in Excel.
+
+You'll need to first create a spreadsheet where you list the authors whose
+publications you want to gather from PMC. The spreadsheet must contain at least
+the following columns with the exact names, including case, below:
 
 - "Official Name"
 - "ORCID number"
@@ -70,7 +76,7 @@ create that file, copy `app/.env.TEMPLATE` as `app/.env`, then open the file for
 editing. You should see placeholders called `SMARTSHEET_KEY=` and
 `NCBI_API_KEY=`, which we'll be filling out with values shortly.
 
-To obtain and enter your Smartsheet API key:
+To obtain and enter your Smartsheet API key (if using Smartsheet):
 1. Open a browser to https://app.smartsheet.com/b/home
 2. Click the "person" icon in the bottom left, revealing a menu
 3. Select "Personal Settings..." from the menu
@@ -98,10 +104,12 @@ https://www.ncbi.nlm.nih.gov/account/settings/.
 5. Enter the key into the `NCBI_API_KEY` line in the `app/.env` file we created
 earlier. For example, with the above key, the line would look like
 `NCBI_API_KEY=ad3da0297af65a2e4dd1bb917447bbd3c388`.
-6. Enter your NCBI account's email address into the line starting with `NCBI_API_EMAIL=`, e.g.
-`NCBI_API_EMAIL=someone@somewhere.edu`
+6. Enter your NCBI account's email address into the line starting with
+`NCBI_API_EMAIL=`, e.g. `NCBI_API_EMAIL=someone@somewhere.edu`
 
 ## Usage
+
+### If You're Using Smartsheet
 
 Before you begin, you'll need the ID of the authors sheet you created earlier.
 You can obtain the Smartsheet sheet ID like so:
@@ -116,16 +124,26 @@ crawler, you can optionally add the Sheet ID to your `app/.env` file by filling
 in the value for `AUTHORS_SHEET_ID`; you will see it appear as the default value
 when you run the cralwer.
 
+### If You're Using a Local Spreadsheet
+
+Make a note of the name of your file, as you'll be supplying it to the script
+shortly.
+
 ### Running the Crawler
 
-Once you have the requirements installed, you can run the script `run_crawl.sh`,
-which will prompt you for the following:
+Once you have the requirements installed, you can run the script
+`./run_crawl.sh` if you're intending to import your authors list from
+Smartsheet. If you're instead using a local file, run the script with the
+filename after the script, e.g. if your file were named `my_authors.xlsx` you'd
+invoke it like `./run_crawl.sh my_authors.xlsx`.
+
+In either case, the script will prompt you for the following:
 
 - the starting date to gather publications (the default is the first of the
   current month),
 - the ending date (default is the end of the current month)
-- the Smartsheet sheet ID where your author list is stored (see below for how to
-  obtain this)
+- the Smartsheet sheet ID where your author list is stored (only if using
+  Smartsheet; see above for how to obtain this number if you are)
 - the department for which to provide results (default is blank, which disables
   filtering).
     - this filters the authors' "Primary Department" field by the value
@@ -139,6 +157,7 @@ output like the following:
 * START_DATE: 2023/02/01
 * END_DATE: 2023/02/28
 * AUTHORS_SHEET_ID: XXX
+* AUTHORS_SHEET_PATH: YYY
 * DEPARTMENT: 
 ---
 Input Notebook:  Create Cites from PMC Lookups - Monthly.ipynb
