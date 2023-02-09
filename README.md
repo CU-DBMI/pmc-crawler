@@ -21,12 +21,13 @@ issue](https://github.com/CU-DBMI/pmc-crawler/issues) or reach out to me
 directly if you need support for another platform, e.g. Windows.
 
 You'll need Docker installed, which you can obtain for your platform here:
-https://www.docker.com/products/docker-desktop/. If you wish to import your
- authors list from [Smartsheet](https://www.smartsheet.com/), you'll also need a
-paid account, as the crawler makes use of the Smartsheet API to pull a
-spreadsheet with information about the authors. You can alternatively provide
-your authors list as a file (currently only as an Excel `.xlsx`), in which case
-you can skip any sections that reference Smartsheet below.
+https://www.docker.com/products/docker-desktop/.
+
+If you wish to import your authors list from [Smartsheet](https://www.smartsheet.com/),
+you'll also need a paid account, as the crawler makes use of the Smartsheet API 
+to pull a spreadsheet with information about the authors. You can alternatively
+provide your authors list as a file (currently only as an Excel `.xlsx`), in which
+case you can skip any sections that reference Smartsheet below.
 
 ## Setup
 
