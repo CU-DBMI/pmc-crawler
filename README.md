@@ -205,3 +205,33 @@ you gave when you started the crawl:
   formatting as the PDF
 - `cites_monthly-YYYY-MM-DD.xlsx`, an Excel spreadsheet containing the same data
   as the reports
+
+## Appendix
+
+This section contains more advanced topics that you may not need in your
+regular use of the crawler.
+
+### Running the Crawler Non-Interactively
+
+If you want to run the crawler without being interactively prompted for the
+start date, end date, etc. you can specify those values as shell variables. The
+relevant variables are as follows:
+
+- `START_DATE`: the starting date for the crawl, specified as "YYYY/MM/DD".
+   Specifying an empty string will default to the first day of the current month.
+- `END_DATE`: the ending date (inclusive) for the crawl, specified as "YYYY/MM/DD".
+  Specifying an empty string will default to the last day of the current month.
+- `DEPARTMENT`: the department value on which to filter.
+   Specifying an empty string will disable filtering authors by department.
+- `AUTHORS_SHEET_ID`: the Smartsheet sheet ID from which to pull authors
+   Optional; if unspecified, the user won't be prompted for it.
+
+For example, to run the crawler for the current month with no department filtering
+and using a local spreadsheet named `DBMI Contact List.xlsx`, you'd invoke it like so:
+
+```
+START_DATE='' END_DATE='' DEPARTMENT='' ./run_crawl.sh 'DBMI Contact List.xlsx'
+```
+
+The crawler will immediately run, reporting its status as usual to standard out
+and writing its results to the `output` folder.

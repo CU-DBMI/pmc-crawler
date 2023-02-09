@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# exit on any error
+set -e
+
 # which docker image to use to run the crawl.
 # (you can either build pmc-crawler locally via build_all_images.sh, or use
 # a version of the crawler from google's artifact repo. we're using the artifact
@@ -37,8 +40,6 @@ fi
 # 1. from an env var with the same name as the argument
 # 2. for authors, dept. args: from the ./app/.env file with the same name as the argument
 # 3. for start, end dates, from a precomputed value
-START_DATE=${START_DATE:-${t_first_date}}
-END_DATE=${END_DATE:-${t_last_date}}
 AUTHORS_SHEET_ID=${AUTHORS_SHEET_ID:-${ENV_AUTHORS_SHEET_ID:-""}}
 AUTHORS_SHEET_PATH=${AUTHORS_SHEET_PATH:-${ENV_AUTHORS_SHEET_PATH:-""}}
 DEPARTMENT=${DEPARTMENT:-${ENV_DEPARTMENT:-""}}
@@ -48,11 +49,21 @@ if [ ! -z "$1" ]; then
     AUTHORS_SHEET_PATH=$1
 fi
 
-read -p "- Enter start date [${START_DATE}]: " INPUT_START_DATE
-START_DATE=${INPUT_START_DATE:-${START_DATE}}
+if [ ! ${START_DATE+x} ]; then
+    read -p "- Enter start date [${t_first_date}]: " INPUT_START_DATE
+    START_DATE=${INPUT_START_DATE:-${t_first_date}}
+elif [ -z "${START_DATE}" ]; then
+    # use the default if an empty string was explicitly provided
+    START_DATE=${t_first_date}
+fi
 
-read -p "- Enter end date [${END_DATE}]: " INPUT_END_DATE
-END_DATE=${INPUT_END_DATE:-${END_DATE}}
+if [ ! ${END_DATE+x} ]; then
+    read -p "- Enter end date [${t_last_date}]: " INPUT_END_DATE
+    END_DATE=${INPUT_END_DATE:-${t_last_date}}
+elif [ -z "${END_DATE}" ]; then
+    # use the default if an empty string was explicitly provided
+    END_DATE=${t_last_date}
+fi
 
 # if AUTHORS_SHEET_PATH is specified, don't prompt for a smartsheet sheet ID
 if [ ! -z "${AUTHORS_SHEET_PATH}" ]; then
@@ -69,8 +80,13 @@ else
     fi
 fi
 
-read -p "- Enter department (a blank value disables this filter): " INPUT_DEPARTMENT
-DEPARTMENT=${INPUT_DEPARTMENT:-""}
+if [ ! ${DEPARTMENT+x} ]; then
+    read -p "- Enter department (a blank value disables this filter): " INPUT_DEPARTMENT
+    DEPARTMENT=${INPUT_DEPARTMENT:-""}
+else
+    # clear DEPARTMENT, disabling it, if the user provided the sentinel 'n/a' string
+    DEPARTMENT=""
+fi
 
 # verify inputs
 
@@ -105,13 +121,13 @@ fi
 docker rm --force pmc-crawler >/dev/null 2>&1
 
 time (
-    docker run --name pmc-crawler \
+    docker run --init -it --name pmc-crawler \
         --network host \
-        -e START_DATE=${START_DATE} \
-        -e END_DATE=${END_DATE} \
+        -e START_DATE="${START_DATE}" \
+        -e END_DATE="${END_DATE}" \
         -e "AUTHORS_SHEET_ID=${AUTHORS_SHEET_ID}" \
         -e "AUTHORS_SHEET_PATH=${AUTHORS_SHEET_PATH}" \
-        -e DEPARTMENT=${DEPARTMENT} \
+        -e DEPARTMENT="${DEPARTMENT}" \
         -v $PWD/app:/app \
         -v $PWD/output:/app/_build \
         -v $PWD/intermediate:/app/_output \
