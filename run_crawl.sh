@@ -31,9 +31,10 @@ fi
 # pre-step: extract params from the .env file, if available
 ENV_FILE="./app/.env"
 if [ -f "${ENV_FILE}" ]; then
-    ENV_AUTHORS_SHEET_ID=$( cat ${ENV_FILE} | grep -e '^AUTHORS_SHEET_ID' | cut -d'=' -f2 )
-    ENV_AUTHORS_SHEET_PATH=$( cat ${ENV_FILE} | grep -e '^AUTHORS_SHEET_PATH' | cut -d'=' -f2 )
-    ENV_DEPARTMENT=$( cat ${ENV_FILE} | grep -e '^DEPARTMENT' | cut -d'=' -f2 )
+    ENV_AUTHORS_SHEET_ID=$( cat ${ENV_FILE} | grep -e '^AUTHORS_SHEET_ID=' | cut -d'=' -f2 )
+    ENV_AUTHORS_SHEET_PATH=$( cat ${ENV_FILE} | grep -e '^AUTHORS_SHEET_PATH=' | cut -d'=' -f2 )
+    ENV_DEPARTMENT=$( cat ${ENV_FILE} | grep -e '^DEPARTMENT=' | cut -d'=' -f2 )
+    ENV_DEPARTMENT_NAME=$( cat ${ENV_FILE} | grep -e '^DEPARTMENT_NAME=' | cut -d'=' -f2 )
 fi
 
 # load defaults for arguments in the following order:
@@ -128,6 +129,7 @@ time (
         -e "AUTHORS_SHEET_ID=${AUTHORS_SHEET_ID}" \
         -e "AUTHORS_SHEET_PATH=${AUTHORS_SHEET_PATH}" \
         -e DEPARTMENT="${DEPARTMENT}" \
+        -e DEPARTMENT_NAME="${ENV_DEPARTMENT_NAME:-''}" \
         -v $PWD/app:/app \
         -v $PWD/output:/app/_build \
         -v $PWD/intermediate:/app/_output \

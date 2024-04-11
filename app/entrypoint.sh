@@ -12,6 +12,7 @@ echo "* END_DATE: ${END_DATE}"
 echo "* AUTHORS_SHEET_ID: ${AUTHORS_SHEET_ID:-(n/a)}"
 echo "* AUTHORS_SHEET_PATH: ${AUTHORS_SHEET_PATH:-(n/a)}"
 echo "* DEPARTMENT: ${DEPARTMENT:-(n/a)}"
+echo "* DEPARTMENT_NAME: ${DEPARTMENT_NAME:-(n/a)}"
 echo "---"
 
 cd /app/notebooks && \
@@ -23,5 +24,6 @@ poetry run papermill \
     -r authors_sheet_id "${AUTHORS_SHEET_ID}" \
     -r authors_sheet_path "${AUTHORS_SHEET_PATH}" \
     -r department "${DEPARTMENT}" \
+    -r department_name "${DEPARTMENT_NAME:-''}" \
     "${TARGET_NOTEBOOK}" \
     "/app/_output/${TARGET_NOTEBOOK}"  
