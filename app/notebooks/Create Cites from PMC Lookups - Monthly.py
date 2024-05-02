@@ -101,19 +101,19 @@ department_name:str = None
 # +
 # !!!!!
 
-# # FIXME: remove this when we're actually using it
+# FIXME: remove this when we're actually using it
 
-# # Customizations for Physiology & Biophysics
-# # authors_sheet_path = "/app/input_sheets/DBMI Contact List.xlsx" 
-# authors_sheet_path = "/app/input_sheets/Physiology & Biophysics Contact List.xlsx"
-# # authors_sheet_path = "/app/input_sheets/Dec 1st 2023 - Physiology & Biophysics Contact List.xlsx"
+# Customizations for Physiology & Biophysics
+# authors_sheet_path = "/app/input_sheets/DBMI Contact List.xlsx" 
+authors_sheet_path = "/app/input_sheets/Physiology & Biophysics Contact List.xlsx"
+# authors_sheet_path = "/app/input_sheets/Dec 1st 2023 - Physiology & Biophysics Contact List.xlsx"
 
-# start_date = "2024/03/01"
-# end_date = "2024/03/31"
-# # start_date = "2023/01/01"
-# # end_date = "2024/01/31"
+start_date = "2024/04/01"
+end_date = "2024/04/30"
+# start_date = "2023/01/01"
+# end_date = "2024/01/31"
 
-# department_name = "Department of Physiology & Biophysics"
+department_name = "Department of Physiology & Biophysics"
 
 # !!!!!
 
@@ -626,7 +626,6 @@ with open(
     f.write("\n")
     f.write(f"Generated {prepared_date}\n")
 
-
 # ## Convert markdown to pdf and docx
 #
 # **experimental!**
@@ -637,8 +636,11 @@ with open(
 #
 #     docker run -d --name reformed -p 8088:8000 ghcr.io/davidlougheed/reformed:sha-1b8f46b
 
+REFORMED_API_URL = "http://reformed:8000" # changed 'reformed' to localhost if you're accessing it from the host
+
+
 def convert(input_path, input_fmt, output_path, output_fmt):
-    url = f"http://localhost:8088/api/v1/from/{input_fmt}/to/{output_fmt}"
+    url = f"{REFORMED_API_URL}/api/v1/from/{input_fmt}/to/{output_fmt}"
     
     try:
         with open(input_path, "rb") as f:
@@ -655,9 +657,8 @@ def convert(input_path, input_fmt, output_path, output_fmt):
         print(ex)
 
 
-
 # +
-url = "http://localhost:8088/api/v1/from/markdown/to/pdf"
+url = f"{REFORMED_API_URL}/api/v1/from/markdown/to/pdf"
 
 input_path = os.path.join(BUILD_FOLDER, BUILD_MARKDOWN_FILENAME)
 output_path = os.path.join(BUILD_FOLDER, BUILD_PDF_FILENAME)
@@ -668,7 +669,7 @@ convert(
 )
 
 # +
-url = "http://localhost:8088/api/v1/from/markdown/to/docx"
+url = f"{REFORMED_API_URL}/api/v1/from/markdown/to/docx"
 
 convert(
     input_path = os.path.join(BUILD_FOLDER, BUILD_MARKDOWN_FILENAME), input_fmt="markdown",
