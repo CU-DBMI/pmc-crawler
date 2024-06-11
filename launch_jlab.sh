@@ -9,7 +9,7 @@ docker network create pmc-crawler || echo "* Network '${DOCKER_NETWORK}' already
 # ensure the format converter container is running
 if ! ( docker ps | grep reformed >/dev/null 2>&1 ); then
     echo "* Reformed isn't running, booting it now..."
-    docker run -d --name reformed \
+    docker run --platform linux/amd64 --rm -d --name reformed \
         -p 8088:8000 --network ${DOCKER_NETWORK} \
         ghcr.io/davidlougheed/reformed:sha-1b8f46b
 fi
