@@ -3,6 +3,12 @@
 # exit on any error
 set -e
 
+# create a network in which to run the PMC crawler and reformed
+DOCKER_NETWORK="pmc-crawler"
+
+docker network create pmc-crawler || echo "* Network '${DOCKER_NETWORK}' already exists, skipping creation..."
+
+
 # which docker image to use to run the crawl.
 # (you can either build pmc-crawler locally via build_all_images.sh, or use
 # a version of the crawler from google's artifact repo. we're using the artifact
@@ -12,7 +18,11 @@ CRAWLER_IMAGE=${CRAWLER_IMAGE:-"us-central1-docker.pkg.dev/cuhealthai-foundation
 # ensure the format converter container is running
 if ! ( docker ps | grep reformed >/dev/null 2>&1 ); then
     echo "* Reformed isn't running, booting it now..."
-    docker run -d --name reformed -p 8088:8000 ghcr.io/davidlougheed/reformed:sha-1b8f46b
+    docker run --rm -d \
+        --name reformed \
+        --network ${DOCKER_NETWORK} \
+        -p 8088:8000 \
+        ghcr.io/davidlougheed/reformed:sha-1b8f46b
 fi
 
 # produce default first-of-month and last-of-month values to use as start date, end date
@@ -44,6 +54,7 @@ fi
 AUTHORS_SHEET_ID=${AUTHORS_SHEET_ID:-${ENV_AUTHORS_SHEET_ID:-""}}
 AUTHORS_SHEET_PATH=${AUTHORS_SHEET_PATH:-${ENV_AUTHORS_SHEET_PATH:-""}}
 DEPARTMENT=${DEPARTMENT:-${ENV_DEPARTMENT:-""}}
+DEPARTMENT_NAME=${DEPARTMENT_NAME:-${ENV_DEPARTMENT_NAME:-""}}
 
 # finally, accept the author sheet as an optional positional param
 if [ ! -z "$1" ]; then
@@ -89,6 +100,14 @@ else
     DEPARTMENT=""
 fi
 
+if [ -z "${DEPARTMENT_NAME}" ]; then
+    read -p "- Enter department name, for customizing the report: " INPUT_DEPARTMENT_NAME
+    DEPARTMENT_NAME=${INPUT_DEPARTMENT_NAME:-""}
+else
+    # set it to a reasonable default
+    DEPARTMENT_NAME="List of Publications"
+fi
+
 # verify inputs
 
 # if both AUTHORS_SHEET_ID and AUTHORS_SHEET_PATH are set, raise an error
@@ -113,7 +132,9 @@ mkdir -p intermediate
 
 # if a local sheet was used, copy that into the container's input staging area
 if [ ! -z "${AUTHORS_SHEET_PATH}" ]; then
-    cp "${AUTHORS_SHEET_PATH}" ./app/input_sheets/
+    cp "${AUTHORS_SHEET_PATH}" ./app/input_sheets/ || \
+        echo "ERROR: failed to copy author sheet to staging area, continuing..."
+    
     # remap author's sheet path so it's relative to this staging area
     AUTHORS_SHEET_PATH=/app/input_sheets/$( basename "${AUTHORS_SHEET_PATH}" )
 fi
@@ -123,13 +144,13 @@ docker rm --force pmc-crawler >/dev/null 2>&1
 
 time (
     docker run --init -it --name pmc-crawler \
-        --network host \
+        --network ${DOCKER_NETWORK} \
         -e START_DATE="${START_DATE}" \
         -e END_DATE="${END_DATE}" \
         -e "AUTHORS_SHEET_ID=${AUTHORS_SHEET_ID}" \
         -e "AUTHORS_SHEET_PATH=${AUTHORS_SHEET_PATH}" \
         -e DEPARTMENT="${DEPARTMENT}" \
-        -e DEPARTMENT_NAME="${ENV_DEPARTMENT_NAME:-''}" \
+        -e DEPARTMENT_NAME="${DEPARTMENT_NAME:-''}" \
         -v $PWD/app:/app \
         -v $PWD/output:/app/_build \
         -v $PWD/intermediate:/app/_output \
