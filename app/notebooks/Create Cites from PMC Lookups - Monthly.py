@@ -13,23 +13,9 @@
 #     name: python3
 # ---
 
-# # Published Items for the Center for Health AI - Monthly
+# # Crawl Published Items
 #
-# This takes a list of authors and searches for any items published for the provided month, grabs the proper citation from manubot-cite, and creates a markdown and MS Word document.
-#
-# The smartsheet with the author search terms can be found here: https://app.smartsheet.com/sheets/rCfg3F64V9c4wH6Q9vcwQwqxF8XqhWJchpQfgRR1?view=grid
-#
-# - 2021/12/20 First demo (ST)
-# - 2022/01/18 Fetch pubmed instead of PMC ids (ST)
-# - 2022/01/19 Added caching to help dev go faster (ST)
-# - 2022/06/24 Changes for monthly counts (DB)
-# - 2022/06/12 Pull user list from smartsheet (ST)
-# - 2022/08/09 Include ORCiD in search terms
-
-# when cells finish running, triggers a push notification in compatible browsers
-# !pip install jupyterlab_notify
-# %load_ext jupyterlab_notify
-# %notify_all
+# This takes a table of authors with identifying information and searches for any items published for the provided timespan, grabs the proper citation from manubot-cite, and creates a markdown, Excel, PDF, and MS Word document.
 
 # +
 import sys
@@ -75,7 +61,7 @@ NCBI_API_KEY = os.environ.get('NCBI_API_KEY')
 # (Optional) NCBI API email
 NCBI_API_EMAIL = os.environ.get('NCBI_API_EMAIL')
 
-# + jupyter={"source_hidden": true} tags=["parameters"]
+# + tags=["parameters"]
 # Papermill Parameters Cell
 # These can be used as arguments via papermill
 
@@ -84,11 +70,10 @@ NCBI_API_EMAIL = os.environ.get('NCBI_API_EMAIL')
 start_date: str = "2024/02/01"
 end_date: str = "2023/03/01"
 
-# this is the ID from jerome's "DBMI Contact List" spreadsheet
-# it appears to contain the correct info, so we're going with this
+# the user may supply a smartsheet sheet ID, which is then pulled via the smartsheet API
 authors_sheet_id:int = os.environ.get('AUTHORS_SHEET_ID', -1)
 
-# alternatively, the user may supply a path to a file
+# alternatively, the user may supply a path to an excel file
 authors_sheet_path:str = os.environ.get('AUTHORS_SHEET_PATH')
 
 # the name of the department by which to filter authors, i.e. the value on which to match against the "Primary Department" column
@@ -97,26 +82,6 @@ department:str = None
 
 # the display name of the department, used to customize the report
 department_name:str = None
-
-# +
-# !!!!!
-
-# FIXME: remove this when we're actually using it
-
-# Customizations for Physiology & Biophysics
-# authors_sheet_path = "/app/input_sheets/DBMI Contact List.xlsx" 
-authors_sheet_path = "/app/input_sheets/Physiology & Biophysics Contact List.xlsx"
-# authors_sheet_path = "/app/input_sheets/Dec 1st 2023 - Physiology & Biophysics Contact List.xlsx"
-
-start_date = "2024/04/01"
-end_date = "2024/04/30"
-# start_date = "2023/01/01"
-# end_date = "2024/01/31"
-
-department_name = "Department of Physiology & Biophysics"
-
-# !!!!!
-
 
 # +
 # first, determine if the user is supplying a local file, in which case don't do anything with smartsheet
@@ -605,7 +570,7 @@ with open(
         f.write("***\n")
 
     f.write(f"## Authors and Search Terms\n\n")
-    f.write(f"Please contact the DBMI A&O staff for changes to name, ORCID, or search terms.\n\n")
+    f.write(f"Please contact your A&O staff for changes to name, ORCID, or search terms.\n\n")
 
     f.write(f"|Author|NCBI Search Term|ORCiD|Title Count\n")
     f.write(f"|---|---|---|---\n")
