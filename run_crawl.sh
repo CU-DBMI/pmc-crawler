@@ -3,11 +3,11 @@
 # exit on any error
 set -e
 
+# allow the user to enable verbose output with an env var
+VERBOSE=${VERBOSE:-0}
+
 # create a network in which to run the PMC crawler and reformed
 DOCKER_NETWORK="pmc-crawler"
-
-docker network create pmc-crawler || echo "* Network '${DOCKER_NETWORK}' already exists, skipping creation..."
-
 
 # which docker image to use to run the crawl.
 # (you can either build pmc-crawler locally via build_all_images.sh, or use
@@ -15,9 +15,19 @@ docker network create pmc-crawler || echo "* Network '${DOCKER_NETWORK}' already
 # repo version by default here since
 CRAWLER_IMAGE=${CRAWLER_IMAGE:-"us-central1-docker.pkg.dev/cuhealthai-foundations/tools/pmc-crawler:latest"}
 
+function echo_verbose {
+    if [[ ${VERBOSE} -eq 1 ]]; then
+        echo "$@"
+    fi
+}
+
+# create the network for the pmc crawler and reformed, if it doesn't already exist
+docker network create pmc-crawler 2>/dev/null || \
+    echo_verbose "* Network '${DOCKER_NETWORK}' already exists, skipping creation..."
+
 # ensure the format converter container is running
 if ! ( docker ps | grep reformed >/dev/null 2>&1 ); then
-    echo "* Reformed isn't running, booting it now..."
+    echo_verbose "* Reformed isn't running, booting it now..."
     docker run --rm -d \
         --name reformed \
         --network ${DOCKER_NETWORK} \
@@ -79,7 +89,7 @@ fi
 
 # if AUTHORS_SHEET_PATH is specified, don't prompt for a smartsheet sheet ID
 if [ ! -z "${AUTHORS_SHEET_PATH}" ]; then
-    echo "* Using sheet specified in AUTHORS_SHEET_PATH (${AUTHORS_SHEET_PATH})"
+    echo_verbose "* Using sheet specified in AUTHORS_SHEET_PATH (${AUTHORS_SHEET_PATH})"
 else
     # default to prompting for an author sheet ID
     if [ -z "${AUTHORS_SHEET_ID}" ]; then
@@ -103,9 +113,6 @@ fi
 if [ -z "${DEPARTMENT_NAME}" ]; then
     read -p "- Enter department name, for customizing the report: " INPUT_DEPARTMENT_NAME
     DEPARTMENT_NAME=${INPUT_DEPARTMENT_NAME:-""}
-else
-    # set it to a reasonable default
-    DEPARTMENT_NAME="List of Publications"
 fi
 
 # verify inputs
@@ -126,15 +133,21 @@ fi
 # --- step 2. start the run with the entered params, storing artifacts in ./output
 # -------------------------------------------------------------------
 
-mkdir -p ./app/input_sheets # should exist, but let's just make sure
-mkdir -p output
+# where the input author spreadsheets are located
+# (it should exist, but let's just make sure)
+mkdir -p ./app/input_sheets
+
+# where the notebook w/evaluated cells will be saved
 mkdir -p intermediate
+
+# where the final reports are stored
+mkdir -p output
 
 # if a local sheet was used, copy that into the container's input staging area
 if [ ! -z "${AUTHORS_SHEET_PATH}" ]; then
-    cp "${AUTHORS_SHEET_PATH}" ./app/input_sheets/ || \
-        echo "ERROR: failed to copy author sheet to staging area, continuing..."
-    
+    cp "${AUTHORS_SHEET_PATH}" ./app/input_sheets/ 2>/dev/null || \
+        echo_verbose "ERROR: failed to copy author sheet to staging area, continuing..."
+
     # remap author's sheet path so it's relative to this staging area
     AUTHORS_SHEET_PATH=/app/input_sheets/$( basename "${AUTHORS_SHEET_PATH}" )
 fi
