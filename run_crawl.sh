@@ -164,6 +164,10 @@ time (
         -e "AUTHORS_SHEET_PATH=${AUTHORS_SHEET_PATH}" \
         -e DEPARTMENT="${DEPARTMENT}" \
         -e DEPARTMENT_NAME="${DEPARTMENT_NAME:-''}" \
+        -e BUILD_FOLDER_PREFIX="${BUILD_FOLDER_PREFIX:-/app/_build}" \
+        -e NCBI_DATETYPE="${NCBI_DATETYPE:-"DEFAULT"}" \
+        -e POSTFILTER_DATES="${POSTFILTER_DATES:-"0"}" \
+        -e PAPERMILL_EXEC=1 \
         -v $PWD/app:/app \
         -v $PWD/output:/app/_build \
         -v $PWD/intermediate:/app/_output \
