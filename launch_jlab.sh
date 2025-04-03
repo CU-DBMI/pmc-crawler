@@ -2,6 +2,8 @@
 
 JLAB_PORT=8810
 
+CRAWLER_IMAGE=${CRAWLER_IMAGE:-"us-central1-docker.pkg.dev/cuhealthai-foundations/tools/pmc-crawler:latest"}
+
 DOCKER_NETWORK="pmc-crawler"
 
 docker network create pmc-crawler || echo "* Network '${DOCKER_NETWORK}' already exists, skipping creation..."
@@ -24,5 +26,5 @@ docker run --name pmc-crawler-jlab \
     -v $PWD/app:/app \
     --env-file ./app/.env \
     --entrypoint='/bin/bash' \
-    pmc-crawler:latest \
+    ${CRAWLER_IMAGE} \
     -c "/usr/local/bin/poetry run jupyter lab --no-browser --allow-root --ip=0.0.0.0 --port=${JLAB_PORT}"
